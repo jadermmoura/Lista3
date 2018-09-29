@@ -6,11 +6,11 @@
 package br.edu.ifrs.dv.lista3.controle;
 
 import br.edu.ifrs.dv.lista3.DAO.BibliotecarioDAO;
-import br.edu.ifrs.dv.lista3.DAO.UsuarioDAO;
+import br.edu.ifrs.dv.lista3.erros.CamposObrigatorios;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Bibliotecario;
-import br.edu.ifrs.dv.lista3.modelo.Usuario;
 import java.util.Optional;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,15 +26,18 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(path = "api/bibliotecario")
+@Valid
 public class BibliotecarioControle {
+
     @Autowired
     BibliotecarioDAO bibliotecarioDAO;
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Bibliotecario> buscar() {
-        return null;
+        return bibliotecarioDAO.findAll();
     }
+    
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
@@ -53,14 +56,20 @@ public class BibliotecarioControle {
     @ResponseStatus(HttpStatus.OK)
     public Bibliotecario inserir(@RequestBody Bibliotecario bibliotecario) {
         bibliotecario.setId(0);
+        
+        
         return bibliotecarioDAO.save(bibliotecario);
-    }
 
+        
+    }      
+
+    
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable int id) {
 
         bibliotecarioDAO.deleteById(id);
+//bibliotecarioDAO.deleteAll();
 
     }
 

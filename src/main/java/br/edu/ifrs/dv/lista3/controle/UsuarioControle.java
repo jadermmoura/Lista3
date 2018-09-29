@@ -13,6 +13,7 @@ import br.edu.ifrs.dv.lista3.DAO.UsuarioDAO;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Usuario;
 import java.util.Optional;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @RestController
 @RequestMapping(path = "/api/usuario")
+@Valid
 public class UsuarioControle {
 
     @Autowired
@@ -38,6 +40,19 @@ public class UsuarioControle {
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Usuario recuperar(@PathVariable int id) {
+        Optional<Usuario> usuarioId = usuarioDAO.findAllById(id);
+        if (usuarioId.isPresent()) {
+            return usuarioId.get();
+
+        } else {
+            throw new NaoEncontrado("Id não encontrado");
+
+        }
+    }
+    
+    @RequestMapping(path = "/{id}/telefones", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public Usuario recuperarTelefone(@PathVariable int id) {
         Optional<Usuario> usuarioId = usuarioDAO.findAllById(id);
         if (usuarioId.isPresent()) {
             return usuarioId.get();

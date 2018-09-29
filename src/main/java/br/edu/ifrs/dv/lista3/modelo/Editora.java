@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 /**
  *
@@ -20,11 +21,10 @@ public class Editora {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    @NotBlank
     private String nome;
+    @NotBlank
     private String cnpj;
-    
-    
 
     public String getNome() {
         return nome;
@@ -41,7 +41,7 @@ public class Editora {
     public void setCnpj(String cnpj) {
         this.cnpj = cnpj;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -49,7 +49,5 @@ public class Editora {
     public void setId(int id) {
         this.id = id;
     }
- 
-    
-    
+
 }

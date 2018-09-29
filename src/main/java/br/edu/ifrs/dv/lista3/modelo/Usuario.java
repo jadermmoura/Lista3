@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
 
 /**
  *
@@ -19,15 +20,16 @@ import javax.persistence.OneToMany;
 @Entity
 public class Usuario {
 
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    @NotBlank
     private String nome;
+    @NotBlank
     private String cpf;
+    @NotBlank
     private String email;
-    
+
     @OneToMany
     private List<Telefone> telefones;
 
@@ -62,8 +64,7 @@ public class Usuario {
     public void setEmail(String email) {
         this.email = email;
     }
-    
-    
+
     public int getId() {
         return id;
     }

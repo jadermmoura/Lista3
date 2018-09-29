@@ -11,28 +11,30 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotBlank;
 
 /**
  *
  * @author jader
  */
-
 @Entity
 public class Livro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    @NotBlank
     private String titulo;
+    @NotBlank
     private int anoPublicacao;
+    @NotBlank
     private boolean doacao;
-    
+
     @ManyToMany
     private List<Autor> autor;
-    
+
     @ManyToMany
-    private List<Editora>editora;
+    private List<Editora> editora;
 
     public String getTitulo() {
         return titulo;
@@ -57,9 +59,7 @@ public class Livro {
     public void setDoacao(boolean doacao) {
         this.doacao = doacao;
     }
-    
-    
-    
+
     public int getId() {
         return id;
     }
@@ -67,7 +67,5 @@ public class Livro {
     public void setId(int id) {
         this.id = id;
     }
-    
-    
-    
+
 }
