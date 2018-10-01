@@ -53,20 +53,21 @@ public class UsuarioControle {
     
     @RequestMapping(path = "/nome/{nome}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Usuario> buscarNome(@PathVariable("nome") String name
-    ) {
-//        if (igual != null) {
-//            return usuarioDAO.findByNome(igual);
-//        } else {
-//
-//            return usuarioDAO.findByNomeContaining(contem);
-//        }
-        return usuarioDAO.findByNome(name);
+    public Iterable<Usuario> buscarNome(@PathVariable("nome") String nome){
+        return usuarioDAO.findByNome(nome);
     }
+    
+    @RequestMapping(path = "/cpf/{cpf}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Usuario> buscarCpf(@PathVariable("cpf") String cpf
+    ) {
+        return usuarioDAO.findByCpf(cpf);
+    }
+    
     
    @RequestMapping(path = "/{idProduto}/telefones/", 
             method = RequestMethod.GET)
-    public Iterable<Telefone> listarModelo(@PathVariable int idProduto) {
+    public Iterable<Telefone> listarTelefone(@PathVariable int idProduto) {
         return this.recuperar(idProduto).getTelefones();
    
     }
