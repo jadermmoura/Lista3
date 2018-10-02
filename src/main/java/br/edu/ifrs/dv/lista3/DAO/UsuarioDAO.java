@@ -5,7 +5,9 @@
  */
 package br.edu.ifrs.dv.lista3.DAO;
 
+import br.edu.ifrs.dv.lista3.modelo.Telefone;
 import br.edu.ifrs.dv.lista3.modelo.Usuario;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -17,6 +19,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UsuarioDAO  extends CrudRepository<Usuario, Integer>{
 
+    public Iterable<Usuario> findByNome(String nome);
+
      public Optional<Usuario> findAllById(int id);
+
+//    public Iterable<Usuario> findByNomeContaining(String contem);
+
+    public void findByNome(Usuario usuario);
+    
+    public void findByTelefones(List<Telefone> telefones);
+
+    public Iterable<Usuario> findByCpf(String cpf);
+    
     
 }

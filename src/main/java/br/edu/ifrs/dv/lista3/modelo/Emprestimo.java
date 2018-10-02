@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotBlank;
 
 /**
  *
@@ -22,17 +23,19 @@ public class Emprestimo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    
+    @NotBlank
     private Date retirada;
+    @NotBlank
     private Date previsaoDevolucao;
+    @NotBlank
     private Date devolucao;
-    
+
     @ManyToOne
     private Bibliotecario bibliotecario;
-    
+
     @ManyToOne
     private Livro livro;
-    
+
     @ManyToOne
     private Usuario usuario;
 
@@ -59,8 +62,6 @@ public class Emprestimo {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
-    
-    
 
     public Date getRetirada() {
         return retirada;
@@ -86,7 +87,6 @@ public class Emprestimo {
         this.devolucao = devolucao;
     }
 
-    
     public int getId() {
         return id;
     }
@@ -94,5 +94,5 @@ public class Emprestimo {
     public void setId(int id) {
         this.id = id;
     }
-    
+
 }

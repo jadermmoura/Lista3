@@ -6,9 +6,12 @@
 package br.edu.ifrs.dv.lista3.controle;
 
 import br.edu.ifrs.dv.lista3.DAO.LivroDao;
+import br.edu.ifrs.dv.lista3.DAO.UsuarioDAO;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
+import br.edu.ifrs.dv.lista3.modelo.Autor;
+import br.edu.ifrs.dv.lista3.modelo.Editora;
 import br.edu.ifrs.dv.lista3.modelo.Livro;
-import br.edu.ifrs.dv.lista3.modelo.Usuario;
+import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Jader
  */
 @RestController
-@RequestMapping(path = "api/livro")
+@RequestMapping(path = "/api/livros")
 @Valid
 public class LivroControle {
 
@@ -44,12 +47,24 @@ public class LivroControle {
         Optional<Livro> livroId = livroDAO.findAllById(id);
         if (livroId.isPresent()) {
             return livroId.get();
-
         } else {
             throw new NaoEncontrado("Id não encontrado");
-
         }
     }
+
+  @RequestMapping(path = "/{idProduto}/autores/", 
+            method = RequestMethod.GET)
+    public List<Autor> listarAutor(@PathVariable int idProduto) {
+        return this.recuperar(idProduto).getAutor();
+   
+    }
+  @RequestMapping(path = "/{idProduto}/editoras/", 
+            method = RequestMethod.GET)
+    public List<Editora> listarEditoras(@PathVariable int idProduto) {
+        return this.recuperar(idProduto).getEditora();
+   
+    }
+    
 
     @RequestMapping(path = "/", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
@@ -58,11 +73,18 @@ public class LivroControle {
         return livroDAO.save(livro);
     }
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(path = "livro/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable int id) {
 
         livroDAO.deleteById(id);
+
+    }
+ @RequestMapping(path = "/", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteTudo() {
+
+        livroDAO.deleteAll();
 
     }
 

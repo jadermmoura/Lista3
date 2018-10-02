@@ -25,13 +25,28 @@ public class Livro {
     private int id;
     @NotBlank
     private String titulo;
-    @NotBlank
     private int anoPublicacao;
-    @NotBlank
     private boolean doacao;
 
+    
     @ManyToMany
     private List<Autor> autor;
+
+    public List<Autor> getAutor() {
+        return autor;
+    }
+
+    public void setAutor(List<Autor> autor) {
+        this.autor = autor;
+    }
+
+    public List<Editora> getEditora() {
+        return editora;
+    }
+
+    public void setEditora(List<Editora> editora) {
+        this.editora = editora;
+    }
 
     @ManyToMany
     private List<Editora> editora;

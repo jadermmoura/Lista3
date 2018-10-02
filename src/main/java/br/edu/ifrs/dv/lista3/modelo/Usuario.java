@@ -6,10 +6,12 @@
 package br.edu.ifrs.dv.lista3.modelo;
 
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
@@ -30,7 +32,9 @@ public class Usuario {
     @NotBlank
     private String email;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(unique = true)
+    
     private List<Telefone> telefones;
 
     public List<Telefone> getTelefones() {

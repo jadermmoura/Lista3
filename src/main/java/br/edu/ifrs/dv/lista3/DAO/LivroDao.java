@@ -9,11 +9,13 @@ import br.edu.ifrs.dv.lista3.modelo.Livro;
 import br.edu.ifrs.dv.lista3.modelo.Usuario;
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Jader
  */
+@Repository
 public interface LivroDao extends CrudRepository<Livro, Integer>{
 
     public Optional<Livro> findAllById(int id);
