@@ -6,7 +6,9 @@
 package br.edu.ifrs.dv.lista3.controle;
 
 import br.edu.ifrs.dv.lista3.DAO.EmprestimoDAO;
+import br.edu.ifrs.dv.lista3.modelo.Emprestimo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +23,11 @@ public class EmprestimoControle {
     @Autowired
     EmprestimoDAO emprestimoDAO;
     
-    
+    @RequestMapping (path = "api/emprestimo")
+    public Iterable<Emprestimo> inserir(@RequestBody Emprestimo emprestimo){
+        
+        return null;
+        
+    }
     
 }

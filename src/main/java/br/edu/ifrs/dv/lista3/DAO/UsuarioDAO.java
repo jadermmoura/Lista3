@@ -31,5 +31,7 @@ public interface UsuarioDAO  extends CrudRepository<Usuario, Integer>{
 
     public Iterable<Usuario> findByCpf(String cpf);
     
+    public Iterable<Usuario> findByEmail(String email);
+    
     
 }

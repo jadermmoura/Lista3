@@ -6,6 +6,7 @@
 package br.edu.ifrs.dv.lista3.DAO;
 
 import br.edu.ifrs.dv.lista3.modelo.Autor;
+import br.edu.ifrs.dv.lista3.modelo.Livro;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,5 +18,6 @@ import org.springframework.stereotype.Repository;
 public interface AutorDAO extends CrudRepository<Autor, Integer>{
 
     public Iterable<Autor> findAllById(int id);
+    
     
 }

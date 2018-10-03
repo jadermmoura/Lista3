@@ -63,6 +63,12 @@ public class UsuarioControle {
     ) {
         return usuarioDAO.findByCpf(cpf);
     }
+    @RequestMapping(path = "/email/{email}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Usuario> buscarEmail(@PathVariable("email") String email
+    ) {
+        return usuarioDAO.findByEmail(email);
+    }
     
     
    @RequestMapping(path = "/{idProduto}/telefones/", 

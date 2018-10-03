@@ -16,10 +16,16 @@ import org.springframework.stereotype.Repository;
  * @author Jader
  */
 @Repository
-public interface LivroDao extends CrudRepository<Livro, Integer>{
+public interface LivroDAO extends CrudRepository<Livro, Integer>{
 
     public Optional<Livro> findAllById(int id);
 
     public Livro save(Usuario usuario);
+
+    public Iterable<Livro> findByTitulo(String titulo);
+
+
+
+    
     
 }

@@ -5,8 +5,7 @@
  */
 package br.edu.ifrs.dv.lista3.controle;
 
-import br.edu.ifrs.dv.lista3.DAO.LivroDao;
-import br.edu.ifrs.dv.lista3.DAO.UsuarioDAO;
+import br.edu.ifrs.dv.lista3.DAO.AutorDAO;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Autor;
 import br.edu.ifrs.dv.lista3.modelo.Editora;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import br.edu.ifrs.dv.lista3.DAO.LivroDAO;
 
 /**
  *
@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LivroControle {
 
     @Autowired
-    LivroDao livroDAO;
+    LivroDAO livroDAO;
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
@@ -52,19 +52,26 @@ public class LivroControle {
         }
     }
 
-  @RequestMapping(path = "/{idProduto}/autores/", 
+    @RequestMapping(path = "/titulo/{titulo}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Livro> buscarTitulo(@PathVariable("titulo") String titulo
+    ) {
+        return livroDAO.findByTitulo(titulo);
+    }
+    
+      @RequestMapping(path = "/{idProduto}/autores/",
             method = RequestMethod.GET)
     public List<Autor> listarAutor(@PathVariable int idProduto) {
         return this.recuperar(idProduto).getAutor();
-   
+
     }
-  @RequestMapping(path = "/{idProduto}/editoras/", 
+
+    @RequestMapping(path = "/{idProduto}/editoras/",
             method = RequestMethod.GET)
     public List<Editora> listarEditoras(@PathVariable int idProduto) {
         return this.recuperar(idProduto).getEditora();
-   
+
     }
-    
 
     @RequestMapping(path = "/", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
@@ -80,7 +87,8 @@ public class LivroControle {
         livroDAO.deleteById(id);
 
     }
- @RequestMapping(path = "/", method = RequestMethod.DELETE)
+
+    @RequestMapping(path = "/", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void deleteTudo() {
 
@@ -91,7 +99,7 @@ public class LivroControle {
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public Livro editar(@PathVariable int id, @RequestBody Livro livroNovo) {
-        
+
         livroNovo.setId(id);
         Livro livroAntigo = this.recuperar(id);
         livroAntigo.setTitulo(livroNovo.getTitulo());
