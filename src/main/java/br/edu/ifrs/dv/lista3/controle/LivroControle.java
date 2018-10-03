@@ -5,10 +5,8 @@
  */
 package br.edu.ifrs.dv.lista3.controle;
 
-import br.edu.ifrs.dv.lista3.DAO.AutorDAO;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Autor;
-import br.edu.ifrs.dv.lista3.modelo.Editora;
 import br.edu.ifrs.dv.lista3.modelo.Livro;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import br.edu.ifrs.dv.lista3.DAO.LivroDAO;
+import br.edu.ifrs.dv.lista3.modelo.Editora;
 
 /**
  *
@@ -51,6 +50,11 @@ public class LivroControle {
             throw new NaoEncontrado("Id não encontrado");
         }
     }
+     @RequestMapping(path = "/{idProduto}/editoras/",method = RequestMethod.GET)
+    public List<Editora> listarEditoras(@PathVariable int idProduto) {
+        return this.recuperar(idProduto).getEditora();
+
+    }
 
     @RequestMapping(path = "/titulo/{titulo}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
@@ -62,14 +66,8 @@ public class LivroControle {
       @RequestMapping(path = "/{idProduto}/autores/",
             method = RequestMethod.GET)
     public List<Autor> listarAutor(@PathVariable int idProduto) {
+        
         return this.recuperar(idProduto).getAutor();
-
-    }
-
-    @RequestMapping(path = "/{idProduto}/editoras/",
-            method = RequestMethod.GET)
-    public List<Editora> listarEditoras(@PathVariable int idProduto) {
-        return this.recuperar(idProduto).getEditora();
 
     }
 
@@ -80,7 +78,7 @@ public class LivroControle {
         return livroDAO.save(livro);
     }
 
-    @RequestMapping(path = "livro/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/delete/{id}/", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable int id) {
 

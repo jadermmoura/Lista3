@@ -28,9 +28,11 @@ public class Livro {
     private int anoPublicacao;
     private boolean doacao;
 
-    
     @ManyToMany
     private List<Autor> autor;
+
+    @ManyToMany
+    private List<Editora> editora;
 
     public List<Autor> getAutor() {
         return autor;
@@ -47,9 +49,6 @@ public class Livro {
     public void setEditora(List<Editora> editora) {
         this.editora = editora;
     }
-
-    @ManyToMany
-    private List<Editora> editora;
 
     public String getTitulo() {
         return titulo;

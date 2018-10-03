@@ -5,8 +5,7 @@
  */
 package br.edu.ifrs.dv.lista3.DAO;
 
-import br.edu.ifrs.dv.lista3.modelo.Editora;
-import java.util.Optional;
+import br.edu.ifrs.dv.lista3.modelo.Telefone;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,21 +14,6 @@ import org.springframework.stereotype.Repository;
  * @author jader
  */
 @Repository
-public interface EditoraDAO  extends CrudRepository<Editora, Iterable>{
-
-
-    public Iterable<Editora> findAllById(int idEditora);
-
-    public Optional<Editora> findById(int id);
-
-    
-
-
-
-
-
-
-
-
+public interface TelefoneDAO extends CrudRepository<Telefone, Iterable> {
     
 }

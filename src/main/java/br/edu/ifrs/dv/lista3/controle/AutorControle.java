@@ -6,7 +6,13 @@
 package br.edu.ifrs.dv.lista3.controle;
 
 import br.edu.ifrs.dv.lista3.DAO.AutorDAO;
+import br.edu.ifrs.dv.lista3.DAO.LivroDAO;
+import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Autor;
+import br.edu.ifrs.dv.lista3.modelo.Editora;
+import br.edu.ifrs.dv.lista3.modelo.Livro;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +33,10 @@ public class AutorControle {
     @Autowired
     AutorDAO autorDAO;
 
-    @RequestMapping(path = "/", method = RequestMethod.GET)
+    @Autowired
+    LivroDAO livroDAO;
 
+    @RequestMapping(path = "/", method = RequestMethod.GET)
     public Iterable<Autor> busca() {
         return autorDAO.findAll();
 
@@ -54,4 +62,17 @@ public class AutorControle {
         return autorDAO.findAllById(id);
 
     }
+
+    @RequestMapping(path = "/livros/{id}/", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public List<Autor> recuperarAutorLivroId(@PathVariable int id) {
+        Optional<Livro> livroId = livroDAO.findAllById(id);
+        if (livroId.isPresent()) {
+            return livroId.get().getAutor();
+        } else {
+            throw new NaoEncontrado("Id não encontrado");
+        }
+    }
+
+    
 }
