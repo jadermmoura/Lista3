@@ -6,7 +6,6 @@
 package br.edu.ifrs.dv.lista3.controle;
 
 import br.edu.ifrs.dv.lista3.DAO.BibliotecarioDAO;
-import br.edu.ifrs.dv.lista3.erros.CamposObrigatorios;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Bibliotecario;
 import java.util.Optional;
@@ -56,8 +55,6 @@ public class BibliotecarioControle {
     @ResponseStatus(HttpStatus.OK)
     public Bibliotecario inserir(@RequestBody Bibliotecario bibliotecario) {
         bibliotecario.setId(0);
-        
-        
         return bibliotecarioDAO.save(bibliotecario);
 
         

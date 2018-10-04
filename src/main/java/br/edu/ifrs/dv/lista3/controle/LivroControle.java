@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import br.edu.ifrs.dv.lista3.DAO.LivroDAO;
 import br.edu.ifrs.dv.lista3.modelo.Editora;
+import javax.validation.constraints.Null;
 
 /**
  *
@@ -51,7 +52,7 @@ public class LivroControle {
         }
     }
      @RequestMapping(path = "/{idProduto}/editoras/",method = RequestMethod.GET)
-    public List<Editora> listarEditoras(@PathVariable int idProduto) {
+    public List<Editora> listarEditorasPeloIdLivro(@PathVariable int idProduto) {
         return this.recuperar(idProduto).getEditora();
 
     }
@@ -75,6 +76,7 @@ public class LivroControle {
     @ResponseStatus(HttpStatus.OK)
     public Livro inserir(@RequestBody Livro livro) {
         livro.setId(0);
+        
         return livroDAO.save(livro);
     }
 

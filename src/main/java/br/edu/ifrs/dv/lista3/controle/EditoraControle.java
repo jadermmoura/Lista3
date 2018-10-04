@@ -8,7 +8,6 @@ package br.edu.ifrs.dv.lista3.controle;
 import br.edu.ifrs.dv.lista3.DAO.EditoraDAO;
 import br.edu.ifrs.dv.lista3.DAO.LivroDAO;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
-import br.edu.ifrs.dv.lista3.modelo.Autor;
 import br.edu.ifrs.dv.lista3.modelo.Editora;
 import br.edu.ifrs.dv.lista3.modelo.Livro;
 import java.util.List;
@@ -44,15 +43,18 @@ public class EditoraControle {
     public Iterable<Editora> buscaEditoraPeloId(@PathVariable int id) {
         return editoraDAO.findAllById(id);
     }
-        
-    @RequestMapping(path = "/{idEditora}/livros/",method = RequestMethod.GET)
+    @RequestMapping(path = "/titulo/{titulo}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public List<Autor> buscaLivrosEditora(@PathVariable int idEditora){
-        return buscaLivrosEditora(idEditora);
+    public Iterable<Livro> buscarTitulo(@PathVariable("titulo") String titulo
+    ) {
+        return livroDAO.findByTitulo(titulo);
     }
+    
+    
     @RequestMapping(path = "/", method = RequestMethod.POST)
     public Editora inserir(@RequestBody Editora editora) {
         editora.setId(0);
+        
         return editoraDAO.save(editora);
 
     }
@@ -68,6 +70,9 @@ public class EditoraControle {
 
         }
     }
+      
+        
+    
   
 
     
