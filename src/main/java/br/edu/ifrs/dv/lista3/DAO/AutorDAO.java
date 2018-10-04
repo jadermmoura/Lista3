@@ -18,6 +18,6 @@ import org.springframework.stereotype.Repository;
 public interface AutorDAO extends CrudRepository<Autor, Integer>{
 
     public Iterable<Autor> findAllById(int id);
-    
+
     
 }

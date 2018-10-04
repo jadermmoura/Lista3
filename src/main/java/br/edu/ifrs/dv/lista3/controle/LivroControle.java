@@ -5,6 +5,7 @@
  */
 package br.edu.ifrs.dv.lista3.controle;
 
+import br.edu.ifrs.dv.lista3.DAO.AutorDAO;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Autor;
 import br.edu.ifrs.dv.lista3.modelo.Livro;
@@ -20,8 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import br.edu.ifrs.dv.lista3.DAO.LivroDAO;
+import br.edu.ifrs.dv.lista3.erros.RequisicaoInvalida;
 import br.edu.ifrs.dv.lista3.modelo.Editora;
-import javax.validation.constraints.Null;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -34,7 +36,25 @@ public class LivroControle {
 
     @Autowired
     LivroDAO livroDAO;
+    @Autowired
+    AutorDAO autorDAO;
 
+    
+     @RequestMapping( path = "/pesquisar/titulo/", method = RequestMethod.GET)
+    public Iterable<Livro> pesquisaPorNomeLivro(
+            @RequestParam(required = false) String inicia, 
+            @RequestParam(required = false) String contem ) {
+        if(inicia!=null) {
+            return livroDAO.findByTituloStartingWith(inicia);
+        }
+        if(contem!=null) {
+            return livroDAO.findByTituloContaining(contem);
+        }
+        
+        throw new RequisicaoInvalida("Indique um dos 2 valores");
+    
+    }
+    
     @RequestMapping(path = "/", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Livro> buscar() {
