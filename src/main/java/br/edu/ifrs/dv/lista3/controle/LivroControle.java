@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import br.edu.ifrs.dv.lista3.DAO.LivroDAO;
+import br.edu.ifrs.dv.lista3.erros.CamposObrigatorios;
 import br.edu.ifrs.dv.lista3.erros.RequisicaoInvalida;
 import br.edu.ifrs.dv.lista3.modelo.Editora;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,6 +50,34 @@ public class LivroControle {
         }
         if(contem!=null) {
             return livroDAO.findByTituloContaining(contem);
+        }
+        
+        throw new RequisicaoInvalida("Indique um dos 2 valores");
+    
+    }
+     @RequestMapping( path = "/pesquisar/primeiroNome/", method = RequestMethod.GET)
+    public Iterable<Autor> pesquisaPorNomeAutor(
+            @RequestParam(required = false) String inicia, 
+            @RequestParam(required = false) String contem ) {
+        if(inicia!=null) {
+            return autorDAO.findByPrimeiroNomeStartingWith(inicia);
+        }
+        if(contem!=null) {
+            return autorDAO.findByPrimeiroNomeContaining(contem);
+        }
+        
+        throw new RequisicaoInvalida("Indique um dos 2 valores");
+    
+    }
+     @RequestMapping( path = "/pesquisar/segundoNome/", method = RequestMethod.GET)
+    public Iterable<Autor> pesquisaPorSobreNomeAutor(
+            @RequestParam(required = false) String inicia, 
+            @RequestParam(required = false) String contem ) {
+        if(inicia!=null) {
+            return autorDAO.findBySegundoNomeStartingWith(inicia);
+        }
+        if(contem!=null) {
+            return autorDAO.findBySegundoNomeContaining(contem);
         }
         
         throw new RequisicaoInvalida("Indique um dos 2 valores");
@@ -96,8 +125,12 @@ public class LivroControle {
     @ResponseStatus(HttpStatus.OK)
     public Livro inserir(@RequestBody Livro livro) {
         livro.setId(0);
+        if (!(livro.getAnoPublicacao() == 0)) {
+           return livroDAO.save(livro);
+        }else{
+            throw new CamposObrigatorios("Faltou algum campo");
+        }
         
-        return livroDAO.save(livro);
     }
 
     @RequestMapping(path = "/delete/{id}/", method = RequestMethod.DELETE)
