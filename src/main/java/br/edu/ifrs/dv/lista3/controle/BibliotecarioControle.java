@@ -68,6 +68,7 @@ public class BibliotecarioControle {
         if (!this.buscarEmail(bibliotecario.getEmail())) {
             return bibliotecarioDAO.save(bibliotecario);
 
+            
         }else{
              throw new EmailJaCadastrado("Email já cadastrado");
         }
