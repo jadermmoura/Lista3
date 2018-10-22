@@ -60,6 +60,9 @@ public class BibliotecarioControle {
         }
     }
     
+    
+    
+    
 //      Só insere se email não estiver no banco já
     @RequestMapping(path = "/bibliotecario/", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
