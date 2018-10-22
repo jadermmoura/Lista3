@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 /**
  *
@@ -28,7 +27,7 @@ public class Bibliotecario {
     @NotBlank
     private String email;
     @NotBlank
-    @Size(min = 8)
+//    @Size(min = 8)
     private String senha;
 
     public String getNome() {

@@ -20,5 +20,9 @@ public interface BibliotecarioDAO extends CrudRepository<Bibliotecario, Integer>
     public Optional<Bibliotecario> findAllById(int id);
 
     public Bibliotecario save(Bibliotecario bibliotecario);
+
+    public Iterable<Bibliotecario> findByEmail(String b);
+
+    public Optional<Bibliotecario> findAllByEmail(String email);
     
 }

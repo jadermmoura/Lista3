@@ -10,6 +10,7 @@ import br.edu.ifrs.dv.lista3.DAO.LivroDAO;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Editora;
 import br.edu.ifrs.dv.lista3.modelo.Livro;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,21 +29,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/api/editoras")
 public class EditoraControle {
-
-    @Autowired
+    
     EditoraDAO editoraDAO;
     @Autowired
     LivroDAO livroDAO;
-
+    
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public Iterable<Editora> buscaTodasEditoras() {
         return editoraDAO.findAll();
     }
+    
+//    @RequestMapping(path = "/buscar/{id}/livros/{idLivro}", method = RequestMethod.GET)
+//    public Livro buscaEditoraPeloId(@PathVariable int id, @PathVariable int idLivro) {
+//        Optional<Livro> livros = livroDAO.findById(id);
+//        if (livros.isPresent()) {
+//            return livros.get();
+//        }else{
+//            throw  new NaoEncontrado(" Não encontrado");
+//        }
+//        
+//    }
 
-    @RequestMapping(path = "/{id}/buscaId", method = RequestMethod.GET)
-    public Iterable<Editora> buscaEditoraPeloId(@PathVariable int id) {
-        return editoraDAO.findAllById(id);
-    }
     @RequestMapping(path = "/titulo/{titulo}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Livro> buscarTitulo(@PathVariable("titulo") String titulo
@@ -50,30 +57,25 @@ public class EditoraControle {
         return livroDAO.findByTitulo(titulo);
     }
     
-    
     @RequestMapping(path = "/", method = RequestMethod.POST)
     public Editora inserir(@RequestBody Editora editora) {
         editora.setId(0);
         
         return editoraDAO.save(editora);
-
+        
     }
+
     @RequestMapping(path = "/{id}/editora/", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<Editora> mostraEditoraPeloIdLivro(@PathVariable int id) {
         Optional<Livro> livroId = livroDAO.findAllById(id);
-
+        
         if (livroId.isPresent()) {
             return livroId.get().getEditora();
         } else {
             throw new NaoEncontrado("Id não encontrado");
-
+            
         }
     }
-      
-        
-    
-  
-
     
 }
