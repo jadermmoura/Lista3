@@ -62,6 +62,7 @@ public class BibliotecarioControle {
     
     
 //      Só insere se email não estiver no banco já
+    //effefefef
     @RequestMapping(path = "/bibliotecario/", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public Bibliotecario inserir(@RequestBody Bibliotecario bibliotecario) {
