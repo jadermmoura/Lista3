@@ -73,7 +73,6 @@ public class BibliotecarioControle {
         }else{
              throw new EmailJaCadastrado("Email já cadastrado");
         }
-
     }
 
     @RequestMapping(path = "/bibliotecario/{id}", method = RequestMethod.DELETE)
