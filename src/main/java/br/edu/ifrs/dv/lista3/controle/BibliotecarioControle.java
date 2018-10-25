@@ -10,7 +10,6 @@ import br.edu.ifrs.dv.lista3.erros.EmailJaCadastrado;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Bibliotecario;
 import java.util.Optional;
-import javax.persistence.NonUniqueResultException;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,7 +42,7 @@ public class BibliotecarioControle {
     @ResponseStatus(HttpStatus.OK)
     public boolean buscarEmail(@PathVariable("email") String email) {
         Optional<Bibliotecario> bibliotecario = bibliotecarioDAO.findAllByEmail(email);
-       
+
         return bibliotecario.isPresent();
     }
 
@@ -61,6 +60,7 @@ public class BibliotecarioControle {
     }
 //      Só insere se email não estiver no banco já
     //effefefef
+
     @RequestMapping(path = "/bibliotecario/", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public Bibliotecario inserir(@RequestBody Bibliotecario bibliotecario) {
@@ -68,20 +68,10 @@ public class BibliotecarioControle {
         if (!this.buscarEmail(bibliotecario.getEmail())) {
             return bibliotecarioDAO.save(bibliotecario);
 
-            
-        }else{
-             throw new EmailJaCadastrado("Email já cadastrado");
+        } else {
+            throw new EmailJaCadastrado("Email já cadastrado");
         }
     }
-    //feffefeff
-    //fdfdffd//d
-    
-    ///fdfdfdfd
-    
-    
-//    dff//
-            
-            
 
     @RequestMapping(path = "/bibliotecario/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)

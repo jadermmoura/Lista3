@@ -9,6 +9,7 @@ import br.edu.ifrs.dv.lista3.DAO.AutorDAO;
 import br.edu.ifrs.dv.lista3.DAO.LivroDAO;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Autor;
+import br.edu.ifrs.dv.lista3.modelo.Editora;
 import br.edu.ifrs.dv.lista3.modelo.Livro;
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +50,11 @@ public class AutorControle {
         return autorSalvo;
 
     }
-
+    @RequestMapping(path = "/todosLivrosAutor/{id}", method = RequestMethod.GET)
+    public Iterable<Livro> testar(@PathVariable int id) {
+        Autor autor = autorDAO.findById(id).get();
+        return livroDAO.findByAutor(autor);
+    }
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable int id) {
         autorDAO.deleteById(id);

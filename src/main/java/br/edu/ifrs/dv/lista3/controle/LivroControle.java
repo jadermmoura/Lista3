@@ -6,6 +6,7 @@
 package br.edu.ifrs.dv.lista3.controle;
 
 import br.edu.ifrs.dv.lista3.DAO.AutorDAO;
+import br.edu.ifrs.dv.lista3.DAO.EditoraDAO;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Autor;
 import br.edu.ifrs.dv.lista3.modelo.Livro;
@@ -39,6 +40,7 @@ public class LivroControle {
     LivroDAO livroDAO;
     @Autowired
     AutorDAO autorDAO;
+    
 
     
      @RequestMapping( path = "/pesquisar/titulo/", method = RequestMethod.GET)
@@ -101,8 +103,14 @@ public class LivroControle {
         }
     }
      @RequestMapping(path = "/{idProduto}/editoras/",method = RequestMethod.GET)
-    public List<Editora> listarEditorasPeloIdLivro(@PathVariable int idProduto) {
+    public List<Editora> listarPeloIdLivroPegaAutor(@PathVariable int idProduto) {
         return this.recuperar(idProduto).getEditora();
+
+    }
+     @RequestMapping(path = "/{id}/autor/",method = RequestMethod.GET)
+    public List<Autor> listarAutorPeloID(@PathVariable int id) {
+        
+        return this.recuperar(id).getAutor();
 
     }
 

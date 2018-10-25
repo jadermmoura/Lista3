@@ -16,14 +16,13 @@ import org.springframework.stereotype.Repository;
  * @author jader
  */
 @Repository
-public interface EditoraDAO  extends CrudRepository<Editora, Iterable>{
-
+public interface EditoraDAO extends CrudRepository<Editora, Iterable> {
 
     public Iterable<Editora> findAllById(int idEditora);
 
     public Optional<Editora> findById(int id);
 
-
+    public Iterable<Editora> findAll();
 
 
 

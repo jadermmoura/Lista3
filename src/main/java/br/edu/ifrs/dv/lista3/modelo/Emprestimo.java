@@ -5,13 +5,13 @@
  */
 package br.edu.ifrs.dv.lista3.modelo;
 
+import java.time.LocalDate;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotBlank;
 
 /**
  *
@@ -23,12 +23,9 @@ public class Emprestimo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotBlank
-    private Date retirada;
-    @NotBlank
-    private Date previsaoDevolucao;
-    @NotBlank
-    private Date devolucao;
+    private LocalDate retirada;
+    private LocalDate previsaoDevolucao;
+    private LocalDate devolucao;
 
     @ManyToOne
     private Bibliotecario bibliotecario;
@@ -63,27 +60,27 @@ public class Emprestimo {
         this.usuario = usuario;
     }
 
-    public Date getRetirada() {
+    public LocalDate getRetirada() {
         return retirada;
     }
 
-    public void setRetirada(Date retirada) {
+    public void setRetirada(LocalDate retirada) {
         this.retirada = retirada;
     }
 
-    public Date getPrevisaoDevolucao() {
+    public LocalDate getPrevisaoDevolucao() {
         return previsaoDevolucao;
     }
 
-    public void setPrevisaoDevolucao(Date previsaoDevolucao) {
+    public void setPrevisaoDevolucao(LocalDate previsaoDevolucao) {
         this.previsaoDevolucao = previsaoDevolucao;
     }
 
-    public Date getDevolucao() {
+    public LocalDate getDevolucao() {
         return devolucao;
     }
 
-    public void setDevolucao(Date devolucao) {
+    public void setDevolucao(LocalDate devolucao) {
         this.devolucao = devolucao;
     }
 
