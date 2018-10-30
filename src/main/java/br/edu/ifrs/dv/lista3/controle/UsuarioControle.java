@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import br.edu.ifrs.dv.lista3.DAO.UsuarioDAO;
+import br.edu.ifrs.dv.lista3.erros.CamposObrigatorios;
+import br.edu.ifrs.dv.lista3.erros.EmailJaCadastrado;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Telefone;
 import br.edu.ifrs.dv.lista3.modelo.Usuario;
@@ -28,93 +30,98 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequestMapping(path = "/api/usuario")
 @Valid
 public class UsuarioControle {
-    
+
     @Autowired
     UsuarioDAO usuarioDAO;
-    
+
     @RequestMapping(path = "/", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Usuario> buscar() {
         return usuarioDAO.findAll();
     }
-    
+
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Usuario recuperar(@PathVariable int id) {
         Optional<Usuario> usuarioId = usuarioDAO.findAllById(id);
         if (usuarioId.isPresent()) {
             return usuarioId.get();
-            
+
         } else {
             throw new NaoEncontrado("Id não encontrado");
-            
         }
     }
-    
+
     @RequestMapping(path = "/nome/{nome}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Usuario> buscarNome(@PathVariable("nome") String nome){
+    public Iterable<Usuario> buscarNome(@PathVariable("nome") String nome) {
         return usuarioDAO.findByNome(nome);
     }
-    
+
     @RequestMapping(path = "/cpf/{cpf}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Usuario> buscarCpf(@PathVariable("cpf") String cpf
     ) {
         return usuarioDAO.findByCpf(cpf);
     }
-    @RequestMapping(path = "/email/{email}", method = RequestMethod.GET)
+    
+    @RequestMapping(path = "/usuario/email/{email}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Usuario> buscarEmail(@PathVariable("email") String email
-    ) {
-        return usuarioDAO.findByEmail(email);
+    public boolean buscarEmail(@PathVariable("email") String email) {
+        Optional<Usuario> usuario = usuarioDAO.findAllByEmail(email);
+        return usuario.isPresent();
     }
-    
-    
-   @RequestMapping(path = "/{idProduto}/telefones/", 
-            method = RequestMethod.GET)
-    public Iterable<Telefone> listarTelefone(@PathVariable int idProduto) {
+
+    @RequestMapping(path = "/{idProduto}/telefones/", method = RequestMethod.GET)
+    public Iterable<Telefone> listarTelefonePeloIdUsuario(@PathVariable int idProduto) {
         return this.recuperar(idProduto).getTelefones();
-   
     }
-    
+
     @RequestMapping(path = "/", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public Usuario inserir(@RequestBody Usuario usuarioNovo) {
+    public Usuario inserirUsuario(@RequestBody Usuario usuarioNovo) {
         usuarioNovo.setId(0);
-        Usuario usuarioSalvo = usuarioDAO.save(usuarioNovo);
-        return usuarioNovo;
+        if (usuarioNovo.getCpf().equals("") || usuarioNovo.getCpf().equals("null")
+                || usuarioNovo.getEmail().equals("") || usuarioNovo.getEmail().equals("null")
+                || usuarioNovo.getNome().equals("") || usuarioNovo.getNome().equals("null")
+                || usuarioNovo.getTelefones().equals("") || usuarioNovo.getTelefones().equals("null")) {
+            throw new CamposObrigatorios("Todos os campos são obrigatórios");
+        }
+        if (this.buscarEmail(usuarioNovo.getEmail())) {
+            throw new EmailJaCadastrado(("Email já cadastrado"));
+        }
+        return usuarioDAO.save(usuarioNovo);
     }
-    
+
     @RequestMapping(path = "/", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void delete() {
-        
+
         usuarioDAO.deleteAll();
-        
+
     }
-    
+
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable int id) {
-        
+
         usuarioDAO.deleteById(id);
-        
+
     }
-    
+
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public Usuario editar(@PathVariable int id, @RequestBody Usuario usuarioNovo) {
         usuarioNovo.setId(id);
-        
+
         Usuario usuarioAntigo = this.recuperar(id);
         usuarioAntigo.setNome(usuarioNovo.getNome());
         usuarioAntigo.setCpf(usuarioNovo.getCpf());
         usuarioAntigo.setEmail(usuarioNovo.getEmail());
         usuarioAntigo.setTelefones(usuarioNovo.getTelefones());
-        
+
         return usuarioDAO.save(usuarioAntigo);
-        
+
     }
-    
+
 }

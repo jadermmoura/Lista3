@@ -22,11 +22,11 @@ public class Bibliotecario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotBlank
+//    @NotBlank
     private String nome;
-    @NotBlank
+//    @NotBlank
     private String email;
-    @NotBlank
+//    @NotBlank
 //    @Size(min = 8)
     private String senha;
 

@@ -21,9 +21,9 @@ public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotBlank
+//    @NotBlank
     private String primeiroNome;
-    @NotBlank
+//    @NotBlank
     private String segundoNome;
 
     public String getPrimeiroNome() {

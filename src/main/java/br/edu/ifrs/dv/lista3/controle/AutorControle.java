@@ -11,6 +11,7 @@ import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Autor;
 import br.edu.ifrs.dv.lista3.modelo.Editora;
 import br.edu.ifrs.dv.lista3.modelo.Livro;
+import br.edu.ifrs.dv.lista3.modelo.Usuario;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,22 +41,36 @@ public class AutorControle {
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public Iterable<Autor> busca() {
         return autorDAO.findAll();
+    }
 
+    @RequestMapping(path = "/primeiroNome/", method = RequestMethod.GET)
+    public Iterable<Autor> buscaPrimeiroNome(@RequestParam(required = false) String primeiroNome) {
+        return autorDAO.findByPrimeiroNomeStartingWith(primeiroNome);
+    }
+
+    @RequestMapping(path = "/segundoNome/", method = RequestMethod.GET)
+    public Iterable<Autor> buscaSegundoNome(@RequestParam(required = false) String segundoNome) {
+        return autorDAO.findBySegundoNome(segundoNome);
     }
 
     @RequestMapping(path = "/", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Autor inserir(@RequestBody Autor autor) {
         autor.setId(0);
-        Autor autorSalvo = autorDAO.save(autor);
-        return autorSalvo;
+        if (autor.getPrimeiroNome().equals("") || autor.getPrimeiroNome().equals("null")
+                || autor.getSegundoNome().equals("") || autor.getSegundoNome().equals("null")) {
+
+        }
+        return autorDAO.save(autor);
 
     }
+
     @RequestMapping(path = "/todosLivrosAutor/{id}", method = RequestMethod.GET)
     public Iterable<Livro> testar(@PathVariable int id) {
         Autor autor = autorDAO.findById(id).get();
         return livroDAO.findByAutor(autor);
     }
+
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable int id) {
         autorDAO.deleteById(id);
@@ -78,5 +94,4 @@ public class AutorControle {
         }
     }
 
-    
 }

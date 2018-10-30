@@ -6,6 +6,7 @@
 package br.edu.ifrs.dv.lista3.controle;
 
 import br.edu.ifrs.dv.lista3.DAO.BibliotecarioDAO;
+import br.edu.ifrs.dv.lista3.erros.CamposObrigatorios;
 import br.edu.ifrs.dv.lista3.erros.EmailJaCadastrado;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Bibliotecario;
@@ -58,28 +59,31 @@ public class BibliotecarioControle {
 
         }
     }
-//      Só insere se email não estiver no banco já
-    //effefefef
-
+    
     @RequestMapping(path = "/bibliotecario/", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public Bibliotecario inserir(@RequestBody Bibliotecario bibliotecario) {
         bibliotecario.setId(0);
-        if (!this.buscarEmail(bibliotecario.getEmail())) {
-            return bibliotecarioDAO.save(bibliotecario);
-
-        } else {
-            throw new EmailJaCadastrado("Email já cadastrado");
+        if (this.buscarEmail(bibliotecario.getEmail())) {
+            throw new EmailJaCadastrado(("Email já cadastrado"));
         }
+        if (bibliotecario.getNome().equals("") || bibliotecario.getNome().equals("null")
+                || bibliotecario.getEmail().equals("") || bibliotecario.getEmail().equals("null")
+                || bibliotecario.getSenha().equals("") || bibliotecario.getSenha().equals("null"))
+        {
+            throw new CamposObrigatorios(("Campo nome, senha e email são obrigatório"));
+        }
+        if (bibliotecario.getSenha().length() < 8) {
+            throw new CamposObrigatorios(("Senha tem que ter mais de 8 caracteres"));
+        }
+        return bibliotecarioDAO.save(bibliotecario);
     }
 
-    @RequestMapping(path = "/bibliotecario/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/bibliotecario/", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable int id) {
-
-        bibliotecarioDAO.deleteById(id);
-//bibliotecarioDAO.deleteAll();
-
+    public void delete() {
+//        bibliotecarioDAO.deleteById(id);
+        bibliotecarioDAO.deleteAll();
     }
 
     @RequestMapping(path = "/bibliotecario/{id}", method = RequestMethod.PUT)
@@ -94,5 +98,4 @@ public class BibliotecarioControle {
         return bibliotecarioDAO.save(bibliotecarioAntigo);
 
     }
-
 }

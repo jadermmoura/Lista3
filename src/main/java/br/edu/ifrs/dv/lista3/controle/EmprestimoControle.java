@@ -15,6 +15,7 @@ import java.util.Calendar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -28,15 +29,25 @@ public class EmprestimoControle {
     @Autowired
     EmprestimoDAO emprestimoDAO;
 
-    @RequestMapping(path = "/")
+    
+    @RequestMapping(path = "/",method = RequestMethod.GET)
+    public Iterable<Emprestimo> emprestimos(){
+        return emprestimoDAO.findAll();
+    }
+    
+    @RequestMapping(path = "/",method = RequestMethod.POST)
     public Emprestimo inserir(@RequestBody Emprestimo emprestimo) {
         emprestimo.setId(0);
         LocalDate hoje = LocalDate.now();
         emprestimo.setRetirada(hoje);
         LocalDate diaPrevisao = hoje.plusDays(7);
         emprestimo.setPrevisaoDevolucao(diaPrevisao);
+        if (emprestimo.getLivro().equals("") || emprestimo.getLivro().equals("null")
+       || emprestimo.getUsuario().equals("") || emprestimo.getUsuario().equals("null")     
+       || emprestimo.getBibliotecario().equals("") || emprestimo.getBibliotecario().equals("null")) {
+            
+        }
         return emprestimoDAO.save(emprestimo);
-
     }
 
 }

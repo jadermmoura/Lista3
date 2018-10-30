@@ -26,12 +26,12 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotBlank
+//    @NotBlank
     private String nome;
-    @NotBlank
+//    @NotBlank
     @Column(unique = true)
     private String cpf;
-    @NotBlank
+//    @NotBlank
     private String email;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

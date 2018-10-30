@@ -6,6 +6,7 @@
 package br.edu.ifrs.dv.lista3.DAO;
 
 import br.edu.ifrs.dv.lista3.modelo.Autor;
+import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +26,11 @@ public interface AutorDAO extends CrudRepository<Autor, Integer>{
     public Iterable<Autor> findBySegundoNomeStartingWith(String inicia);
 
     public Iterable<Autor> findBySegundoNomeContaining(String contem);
+
+    public Iterable<Autor> findBySegundoNome(String segundoNome);
+
+
+
 
     
 }
