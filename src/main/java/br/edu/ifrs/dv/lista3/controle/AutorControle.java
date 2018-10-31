@@ -7,11 +7,11 @@ package br.edu.ifrs.dv.lista3.controle;
 
 import br.edu.ifrs.dv.lista3.DAO.AutorDAO;
 import br.edu.ifrs.dv.lista3.DAO.LivroDAO;
+import br.edu.ifrs.dv.lista3.erros.AutorJaCadastrado;
+import br.edu.ifrs.dv.lista3.erros.CamposObrigatorios;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Autor;
-import br.edu.ifrs.dv.lista3.modelo.Editora;
 import br.edu.ifrs.dv.lista3.modelo.Livro;
-import br.edu.ifrs.dv.lista3.modelo.Usuario;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,16 +57,25 @@ public class AutorControle {
     @ResponseStatus(HttpStatus.CREATED)
     public Autor inserir(@RequestBody Autor autor) {
         autor.setId(0);
-        if (autor.getPrimeiroNome().equals("") || autor.getPrimeiroNome().equals("null")
-                || autor.getSegundoNome().equals("") || autor.getSegundoNome().equals("null")) {
+        if (autor.getPrimeiroNome().equals("") || autor.getPrimeiroNome() == null
+                || autor.getSegundoNome().equals("") || autor.getSegundoNome() == null) {
+            throw new CamposObrigatorios("Campos são obrigatórios");
 
+        }
+        // verifica primeiro e segundo nome igual
+        Iterable<Autor> listaAutores = autorDAO.findAll();
+               for (Autor autorCadastrado : listaAutores) {
+            if (autorCadastrado.getPrimeiroNome().equals(autor.getPrimeiroNome()) &&
+                    autorCadastrado.getSegundoNome().equals(autor.getSegundoNome())) {
+                 throw new AutorJaCadastrado("Autor já cadastrado");
+            }
         }
         return autorDAO.save(autor);
 
     }
 
     @RequestMapping(path = "/todosLivrosAutor/{id}", method = RequestMethod.GET)
-    public Iterable<Livro> testar(@PathVariable int id) {
+    public Iterable<Livro> todosLivrosAutor(@PathVariable int id) {
         Autor autor = autorDAO.findById(id).get();
         return livroDAO.findByAutor(autor);
     }

@@ -73,9 +73,8 @@ public class EditoraControle {
     @RequestMapping(path = "/", method = RequestMethod.POST)
     public Editora inserir(@RequestBody Editora editora) {
         editora.setId(0);
-        if (editora.getNome().equals("") || editora.getNome().equals("null")
-                || editora.getNome().equals("") || editora.getNome().equals("null")
-                || editora.getCnpj().equals("") || editora.getCnpj().equals("null")) {
+        if (editora.getNome().isEmpty() || editora.getNome() == null
+                || editora.getCnpj().isEmpty()| editora.getCnpj() == null) {
             throw new CamposObrigatorios("Todos os campos são obrigatórios");
         }   
         if (this.verificaCnpjRepetido(editora.getCnpj())) {
@@ -85,8 +84,8 @@ public class EditoraControle {
 
     }
 
-    @RequestMapping(path = "/todos/{id}", method = RequestMethod.GET)
-    public Iterable<Livro> testar(@PathVariable int id) {
+    @RequestMapping(path = "/todosLivrosEditora/{id}", method = RequestMethod.GET)
+    public Iterable<Livro> listaTodosLivroEditora(@PathVariable int id) {
         Editora editora = editoraDAO.findById(id).get();
         return livroDAO.findByEditora(editora);
     }

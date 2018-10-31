@@ -64,17 +64,17 @@ public class BibliotecarioControle {
     @ResponseStatus(HttpStatus.OK)
     public Bibliotecario inserir(@RequestBody Bibliotecario bibliotecario) {
         bibliotecario.setId(0);
-        if (this.buscarEmail(bibliotecario.getEmail())) {
-            throw new EmailJaCadastrado(("Email já cadastrado"));
-        }
-        if (bibliotecario.getNome().equals("") || bibliotecario.getNome().equals("null")
-                || bibliotecario.getEmail().equals("") || bibliotecario.getEmail().equals("null")
-                || bibliotecario.getSenha().equals("") || bibliotecario.getSenha().equals("null"))
+        if (bibliotecario.getNome() == null|| bibliotecario.getEmail() == null ||
+               bibliotecario.getSenha() == null || bibliotecario.getNome().equals("")|| bibliotecario.getEmail().equals("") ||
+               bibliotecario.getSenha().equals(""))
         {
             throw new CamposObrigatorios(("Campo nome, senha e email são obrigatório"));
         }
         if (bibliotecario.getSenha().length() < 8) {
             throw new CamposObrigatorios(("Senha tem que ter mais de 8 caracteres"));
+        }
+        if (this.buscarEmail(bibliotecario.getEmail())) {
+            throw new EmailJaCadastrado(("Email já cadastrado"));
         }
         return bibliotecarioDAO.save(bibliotecario);
     }

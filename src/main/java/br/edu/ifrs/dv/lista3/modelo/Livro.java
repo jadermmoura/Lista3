@@ -23,7 +23,7 @@ public class Livro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotBlank
+//    @NotBlank
     private String titulo;
     private int anoPublicacao;
     private boolean doacao;

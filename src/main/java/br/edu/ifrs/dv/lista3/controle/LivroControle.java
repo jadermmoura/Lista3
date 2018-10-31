@@ -6,7 +6,7 @@
 package br.edu.ifrs.dv.lista3.controle;
 
 import br.edu.ifrs.dv.lista3.DAO.AutorDAO;
-import br.edu.ifrs.dv.lista3.DAO.EditoraDAO;
+import br.edu.ifrs.dv.lista3.DAO.EmprestimoDAO;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Autor;
 import br.edu.ifrs.dv.lista3.modelo.Livro;
@@ -25,7 +25,6 @@ import br.edu.ifrs.dv.lista3.DAO.LivroDAO;
 import br.edu.ifrs.dv.lista3.erros.CamposObrigatorios;
 import br.edu.ifrs.dv.lista3.erros.RequisicaoInvalida;
 import br.edu.ifrs.dv.lista3.modelo.Editora;
-import javafx.scene.control.Alert;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -41,6 +40,8 @@ public class LivroControle {
     LivroDAO livroDAO;
     @Autowired
     AutorDAO autorDAO;
+    @Autowired
+    EmprestimoDAO emprestimoDAO;
 
     @RequestMapping(path = "/pesquisar/titulo/", method = RequestMethod.GET)
     public Iterable<Livro> pesquisaPorNomeLivro(
@@ -105,7 +106,7 @@ public class LivroControle {
     }
 
     @RequestMapping(path = "/{id}/editoras/", method = RequestMethod.GET)
-    public List<Editora> listarPeloIdLivroPegaAutor(@PathVariable int id) {
+    public List<Editora> listarEditoraDoLivro(@PathVariable int id) {
         return this.recuperar(id).getEditora();
 
     }
@@ -134,7 +135,7 @@ public class LivroControle {
     @ResponseStatus(HttpStatus.OK)
     public Livro inserir(@RequestBody Livro livro) {
         livro.setId(0);
-        if (!(livro.getAnoPublicacao() == 0 || livro.getTitulo().equals("") || livro.getTitulo().equals("null"))) {
+        if (!(livro.getAnoPublicacao() == 0 || livro.getTitulo().equals("") || livro.getTitulo() == null)) {
             return livroDAO.save(livro);
         }else {
             
