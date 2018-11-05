@@ -21,9 +21,9 @@ public class Editora {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotBlank
+//    @NotBlank
     private String nome;
-    @NotBlank
+//    @NotBlank
     private String cnpj;
 
     public String getNome() {

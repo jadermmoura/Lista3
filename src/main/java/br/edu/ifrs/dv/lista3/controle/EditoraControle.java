@@ -41,6 +41,7 @@ public class EditoraControle {
         return editoraDAO.findAll();
     }
 
+
     @RequestMapping(path = "/buscar/{id}", method = RequestMethod.GET)
     public Optional<Livro> buscaEditoraPeloId(@PathVariable int id, @PathVariable int idLivro) {
         Optional<Livro> livros = livroDAO.findById(id);
@@ -63,26 +64,26 @@ public class EditoraControle {
         return editoraDAO.findByCnpj(cnpj);
     }
 
-    @RequestMapping(path = "/editora/cnpj/{cnpj}", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public boolean verificaCnpjRepetido(@PathVariable("cnpj") String cnpj) {
-        Optional<Editora> editora = editoraDAO.findAllByCnpj(cnpj);
-        return editora.isPresent();
-    }
+//    @RequestMapping(path = "/editora/cnpj/{cnpj}", method = RequestMethod.GET)
+//    @ResponseStatus(HttpStatus.OK)
+//    public boolean verificaCnpjRepetido(@PathVariable("cnpj") String cnpj) {
+//        Optional<Editora> editora = editoraDAO.findAllByCnpj(cnpj);
+//        return editora.isPresent();
+//    }
 
-    @RequestMapping(path = "/", method = RequestMethod.POST)
-    public Editora inserir(@RequestBody Editora editora) {
-        editora.setId(0);
-        if (editora.getNome().isEmpty() || editora.getNome() == null
-                || editora.getCnpj().isEmpty()| editora.getCnpj() == null) {
-            throw new CamposObrigatorios("Todos os campos são obrigatórios");
-        }   
-        if (this.verificaCnpjRepetido(editora.getCnpj())) {
-            throw new CamposObrigatorios(("Cnpj já cadastrado"));
-        }
-        return editoraDAO.save(editora);
-
-    }
+//    @RequestMapping(path = "/", method = RequestMethod.POST)
+//    public Editora inserir(@RequestBody Editora editora) {
+//        editora.setId(0);
+//        if (editora.getNome().isEmpty() || editora.getNome() == null
+//                || editora.getCnpj().isEmpty() | editora.getCnpj() == null) {
+//            throw new CamposObrigatorios("Todos os campos são obrigatórios");
+//        }
+//        if (this.verificaCnpjRepetido(editora.getCnpj())) {
+//            throw new CamposObrigatorios(("Cnpj já cadastrado"));
+//        }
+//        return editoraDAO.save(editora);
+//
+//    }
 
     @RequestMapping(path = "/todosLivrosEditora/{id}", method = RequestMethod.GET)
     public Iterable<Livro> listaTodosLivroEditora(@PathVariable int id) {

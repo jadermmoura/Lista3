@@ -5,6 +5,7 @@
  */
 package br.edu.ifrs.dv.lista3.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,7 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
 
 /**
  *
@@ -34,9 +34,10 @@ public class Usuario {
 //    @NotBlank
     private String email;
 
+//    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(unique = true)
-
+//    @ManyToMany(mappedBy = "fornecedores")
     private List<Telefone> telefones;
 
     public List<Telefone> getTelefones() {

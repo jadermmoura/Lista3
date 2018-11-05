@@ -7,7 +7,6 @@ package br.edu.ifrs.dv.lista3.DAO;
 
 import br.edu.ifrs.dv.lista3.modelo.Autor;
 import br.edu.ifrs.dv.lista3.modelo.Editora;
-import br.edu.ifrs.dv.lista3.modelo.Emprestimo;
 import br.edu.ifrs.dv.lista3.modelo.Livro;
 import br.edu.ifrs.dv.lista3.modelo.Usuario;
 import java.util.Optional;

@@ -6,6 +6,7 @@
 package br.edu.ifrs.dv.lista3.controle;
 
 import br.edu.ifrs.dv.lista3.DAO.AutorDAO;
+import br.edu.ifrs.dv.lista3.DAO.EditoraDAO;
 import br.edu.ifrs.dv.lista3.DAO.EmprestimoDAO;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
 import br.edu.ifrs.dv.lista3.modelo.Autor;
@@ -42,6 +43,8 @@ public class LivroControle {
     AutorDAO autorDAO;
     @Autowired
     EmprestimoDAO emprestimoDAO;
+    @Autowired
+    EditoraDAO editoraDAO;
 
     @RequestMapping(path = "/pesquisar/titulo/", method = RequestMethod.GET)
     public Iterable<Livro> pesquisaPorNomeLivro(
@@ -111,13 +114,10 @@ public class LivroControle {
 
     }
 
-    @RequestMapping(path = "/{id}/autor/", method = RequestMethod.GET)
-    public List<Autor> listarAutorPeloID(@PathVariable int id) {
-
-        return this.recuperar(id).getAutor();
-
-    }
-
+//    @RequestMapping(path = "/{id}/autor/", method = RequestMethod.GET)
+//    public List<Autor> listarAutorPeloID(@PathVariable int id) {
+//        return this.recuperar(id).getAutor();
+//    }
     @RequestMapping(path = "/titulo/{titulo}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Livro> buscarTitulo(@PathVariable("titulo") String titulo
@@ -125,8 +125,7 @@ public class LivroControle {
         return livroDAO.findByTitulo(titulo);
     }
 
-    @RequestMapping(path = "/{idProduto}/autores/",
-            method = RequestMethod.GET)
+    @RequestMapping(path = "/{idProduto}/autores/",method = RequestMethod.GET)
     public List<Autor> listarAutor(@PathVariable int idProduto) {
         return this.recuperar(idProduto).getAutor();
     }
@@ -137,12 +136,85 @@ public class LivroControle {
         livro.setId(0);
         if (!(livro.getAnoPublicacao() == 0 || livro.getTitulo().equals("") || livro.getTitulo() == null)) {
             return livroDAO.save(livro);
-        }else {
-            
+        } else {
             throw new CamposObrigatorios("Todos os campos são obrigatórios");
         }
     }
-    @RequestMapping(path = "/delete/{id}/", method = RequestMethod.DELETE)
+
+    @RequestMapping(path = "/{id}/editora/",method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Editora inserirEditoraNoLivro(@PathVariable int id,
+            @RequestBody Editora editora) {
+      editora.setId(0);
+        if (editora.getNome().isEmpty() || editora.getNome() == null
+                || editora.getCnpj().isEmpty() | editora.getCnpj() == null) {
+            throw new CamposObrigatorios("Todos os campos são obrigatórios");
+        }if (this.verificaCnpjRepetidoEditora(editora.getCnpj())) {
+            throw new CamposObrigatorios(("Cnpj já cadastrado"));
+        }
+        Editora editoraSalvo = editoraDAO.save(editora);
+        Livro livro = this.recuperar(id);
+        livro.getEditora().add(editoraSalvo);
+        livroDAO.save(livro);
+        return editoraSalvo;
+    }
+
+    @RequestMapping(path = "/{id}/autor",method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Autor inserirAutorNoLivro(@PathVariable int id,
+            @RequestBody Autor autor) {
+        autor.setId(0);
+        if (autor.getPrimeiroNome().isEmpty() || autor.getPrimeiroNome() == null
+                || autor.getSegundoNome().isEmpty() || autor.getSegundoNome() == null) {
+            throw new CamposObrigatorios("Todos os campos são obrigatórios");
+        }
+        Autor autorSalvo = autorDAO.save(autor);
+        Livro livro = this.recuperar(id);
+        livro.getAutor().add(autorSalvo);
+        livroDAO.save(livro);
+        return autorSalvo;
+    }
+
+    @RequestMapping(path = "/{idProduto}/editoras/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void apagarEditora(@PathVariable int idProduto,
+            @PathVariable int id) {
+        Editora editoraAchado = null;
+        Livro editora = this.recuperar(idProduto);
+        List<Editora> editoras = editora.getEditora();
+        for (Editora editoraLista : editoras) {
+            if (id == editoraLista.getId()) {
+                editoraAchado = editoraLista;
+            }
+        }
+        if (editoraAchado != null) {
+            editora.getEditora().remove(editoraAchado);
+            livroDAO.save(editora);
+        } else {
+            throw new NaoEncontrado("Não encontrado");
+        }
+    }
+    @RequestMapping(path = "/{idProduto}/autor/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void apagarAutor(@PathVariable int idProduto,
+            @PathVariable int id) {
+        Autor autorAchado = null;
+        Livro autor = this.recuperar(idProduto);
+        List<Autor> autores = autor.getAutor();
+        for (Autor editoraLista : autores) {
+            if (id == editoraLista.getId()) {
+                autorAchado = editoraLista;
+            }
+        }
+        if (autorAchado != null) {
+            autor.getAutor().remove(autorAchado);
+            livroDAO.save(autor);
+        } else {
+            throw new NaoEncontrado("Não encontrado");
+        }
+    }
+
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable int id) {
 
@@ -153,9 +225,7 @@ public class LivroControle {
     @RequestMapping(path = "/", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void deleteTudo() {
-
         livroDAO.deleteAll();
-
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
@@ -168,6 +238,11 @@ public class LivroControle {
         livroAntigo.setAnoPublicacao(livroNovo.getAnoPublicacao());
         livroAntigo.setDoacao(livroNovo.isDoacao());
         return livroDAO.save(livroAntigo);
-
     }
+    @RequestMapping(path = "/editora/cnpj/{cnpj}", method = RequestMethod.GET)
+    public boolean verificaCnpjRepetidoEditora(@PathVariable("cnpj") String cnpj) {
+        Optional<Editora> editora = editoraDAO.findAllByCnpj(cnpj);
+        return editora.isPresent();
+    }
+
 }

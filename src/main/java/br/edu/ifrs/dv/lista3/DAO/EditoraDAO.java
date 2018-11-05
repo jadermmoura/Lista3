@@ -27,6 +27,9 @@ public interface EditoraDAO extends CrudRepository<Editora, Iterable> {
 
     public Optional<Editora> findAllByCnpj(String cnpj);
 
+    public void deleteById(int id);
+
+    
 
 
 

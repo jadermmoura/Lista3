@@ -71,7 +71,6 @@ public class AutorControle {
             }
         }
         return autorDAO.save(autor);
-
     }
 
     @RequestMapping(path = "/todosLivrosAutor/{id}", method = RequestMethod.GET)

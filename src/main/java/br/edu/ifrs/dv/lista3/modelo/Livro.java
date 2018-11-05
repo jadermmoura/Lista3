@@ -5,13 +5,13 @@
  */
 package br.edu.ifrs.dv.lista3.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.validation.constraints.NotBlank;
 
 /**
  *
@@ -28,9 +28,11 @@ public class Livro {
     private int anoPublicacao;
     private boolean doacao;
 
+    @JsonIgnore
     @ManyToMany
     private List<Autor> autor;
 
+    @JsonIgnore
     @ManyToMany
     private List<Editora> editora;
 
