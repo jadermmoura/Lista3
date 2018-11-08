@@ -6,6 +6,7 @@
 package br.edu.ifrs.dv.lista3.DAO;
 
 import br.edu.ifrs.dv.lista3.modelo.Editora;
+import br.edu.ifrs.dv.lista3.modelo.Livro;
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -28,6 +29,8 @@ public interface EditoraDAO extends CrudRepository<Editora, Iterable> {
     public Optional<Editora> findAllByCnpj(String cnpj);
 
     public void deleteById(int id);
+
+    public Editora save(Livro livro);
 
     
 

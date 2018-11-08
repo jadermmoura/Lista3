@@ -38,8 +38,27 @@ public class AutorControle {
     @Autowired
     LivroDAO livroDAO;
 
+    @RequestMapping(path = "/", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Autor inserirAutores(@RequestBody Autor autor) {
+        autor.setId(0);
+        if (autor.getPrimeiroNome().equals("") || autor.getPrimeiroNome() == null
+                || autor.getSegundoNome().equals("") || autor.getSegundoNome() == null) {
+            throw new CamposObrigatorios("Campos são obrigatórios");
+
+        }
+        // verifica primeiro e segundo nome igual
+        Iterable<Autor> listaAutores = autorDAO.findAll();
+            for (Autor autorCadastrado : listaAutores) {
+            if (autorCadastrado.getPrimeiroNome().equals(autor.getPrimeiroNome()) &&
+                    autorCadastrado.getSegundoNome().equals(autor.getSegundoNome())) {
+                 throw new AutorJaCadastrado("Autor já cadastrado");
+            }
+        }
+        return autorDAO.save(autor);
+    }
     @RequestMapping(path = "/", method = RequestMethod.GET)
-    public Iterable<Autor> busca() {
+    public Iterable<Autor> buscaTodosAutores() {
         return autorDAO.findAll();
     }
 
@@ -53,53 +72,11 @@ public class AutorControle {
         return autorDAO.findBySegundoNome(segundoNome);
     }
 
-    @RequestMapping(path = "/", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.CREATED)
-    public Autor inserir(@RequestBody Autor autor) {
-        autor.setId(0);
-        if (autor.getPrimeiroNome().equals("") || autor.getPrimeiroNome() == null
-                || autor.getSegundoNome().equals("") || autor.getSegundoNome() == null) {
-            throw new CamposObrigatorios("Campos são obrigatórios");
-
-        }
-        // verifica primeiro e segundo nome igual
-        Iterable<Autor> listaAutores = autorDAO.findAll();
-               for (Autor autorCadastrado : listaAutores) {
-            if (autorCadastrado.getPrimeiroNome().equals(autor.getPrimeiroNome()) &&
-                    autorCadastrado.getSegundoNome().equals(autor.getSegundoNome())) {
-                 throw new AutorJaCadastrado("Autor já cadastrado");
-            }
-        }
-        return autorDAO.save(autor);
-    }
 
     @RequestMapping(path = "/todosLivrosAutor/{id}", method = RequestMethod.GET)
     public Iterable<Livro> todosLivrosAutor(@PathVariable int id) {
         Autor autor = autorDAO.findById(id).get();
         return livroDAO.findByAutor(autor);
-    }
-
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable int id) {
-        autorDAO.deleteById(id);
-
-    }
-
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public Iterable<Autor> recuperar(@PathVariable int id) {
-        return autorDAO.findAllById(id);
-
-    }
-
-    @RequestMapping(path = "/livros/{id}/", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public List<Autor> recuperarAutorLivroId(@PathVariable int id) {
-        Optional<Livro> livroId = livroDAO.findAllById(id);
-        if (livroId.isPresent()) {
-            return livroId.get().getAutor();
-        } else {
-            throw new NaoEncontrado("Id não encontrado");
-        }
     }
 
 }

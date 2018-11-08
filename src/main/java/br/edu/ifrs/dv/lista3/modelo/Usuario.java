@@ -26,18 +26,18 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-//    @NotBlank
+    
     private String nome;
-//    @NotBlank
+    
     @Column(unique = true)
     private String cpf;
-//    @NotBlank
+    
     private String email;
 
-//    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(unique = true)
-//    @ManyToMany(mappedBy = "fornecedores")
+//    @JoinColumn(unique = true)
+//    @OneToMany(mappedBy = "telefones")
+    @JsonIgnore
     private List<Telefone> telefones;
 
     public List<Telefone> getTelefones() {

@@ -26,6 +26,7 @@ public class Editora {
 //    @NotBlank
     private String cnpj;
 
+    
     public String getNome() {
         return nome;
     }

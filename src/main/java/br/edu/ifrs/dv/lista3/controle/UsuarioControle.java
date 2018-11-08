@@ -7,6 +7,7 @@ package br.edu.ifrs.dv.lista3.controle;
 
 import br.edu.ifrs.dv.lista3.DAO.AutorDAO;
 import br.edu.ifrs.dv.lista3.DAO.EmprestimoDAO;
+import br.edu.ifrs.dv.lista3.DAO.TelefoneDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,7 +16,9 @@ import br.edu.ifrs.dv.lista3.DAO.UsuarioDAO;
 import br.edu.ifrs.dv.lista3.erros.CamposObrigatorios;
 import br.edu.ifrs.dv.lista3.erros.EmailJaCadastrado;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
+import br.edu.ifrs.dv.lista3.modelo.Editora;
 import br.edu.ifrs.dv.lista3.modelo.Emprestimo;
+import br.edu.ifrs.dv.lista3.modelo.Livro;
 import br.edu.ifrs.dv.lista3.modelo.Telefone;
 import br.edu.ifrs.dv.lista3.modelo.Usuario;
 import java.util.Optional;
@@ -39,6 +42,9 @@ public class UsuarioControle {
     AutorDAO autorDAO;
     @Autowired
     EmprestimoDAO emprestimoDAO;
+    @Autowired
+    TelefoneDAO telefoneDAO;
+
     @RequestMapping(path = "/", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Usuario> buscar() {
@@ -51,16 +57,18 @@ public class UsuarioControle {
         Optional<Usuario> usuarioId = usuarioDAO.findAllById(id);
         if (usuarioId.isPresent()) {
             return usuarioId.get();
-   
+
         } else {
             throw new NaoEncontrado("Id não encontrado");
         }
     }
-   @RequestMapping(path = "/todosEmprestimosUsuario/{id}", method = RequestMethod.GET)
+
+    @RequestMapping(path = "/todosEmprestimosUsuario/{id}", method = RequestMethod.GET)
     public Iterable<Emprestimo> todosEmprestimosUsuario(@PathVariable int id) {
         Usuario user = usuarioDAO.findById(id).get();
         return emprestimoDAO.usuario(user);
     }
+
     @RequestMapping(path = "/nome/{nome}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Usuario> buscarNome(@PathVariable("nome") String nome) {
@@ -73,7 +81,7 @@ public class UsuarioControle {
     ) {
         return usuarioDAO.findByCpf(cpf);
     }
-    
+
     @RequestMapping(path = "/email/{email}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public boolean buscarEmail(@PathVariable("email") String email) {
@@ -91,28 +99,38 @@ public class UsuarioControle {
     public Usuario inserirUsuario(@RequestBody Usuario usuarioNovo) {
         usuarioNovo.setId(0);
         if (usuarioNovo.getCpf().equals("") || usuarioNovo.getCpf() == null
-                || usuarioNovo.getEmail().equals("") || usuarioNovo.getEmail() == null 
-                || usuarioNovo.getNome().equals("") || usuarioNovo.getNome() == null 
-                || usuarioNovo.getTelefones().equals("") || usuarioNovo.getTelefones() == null ) {
+                || usuarioNovo.getEmail().equals("") || usuarioNovo.getEmail() == null
+                || usuarioNovo.getNome().equals("") || usuarioNovo.getNome() == null)
+                 {
             throw new CamposObrigatorios("Todos os campos são obrigatórios");
         }
         if (this.buscarEmail(usuarioNovo.getEmail())) {
             throw new EmailJaCadastrado(("Email já cadastrado"));
         }
+
         return usuarioDAO.save(usuarioNovo);
     }
 
-    @RequestMapping(path = "/", method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.OK)
-    public void delete() {
+    @RequestMapping(path = "/{id}/telefones/", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Telefone inserirTelefone(@PathVariable int id,
+            @RequestBody Telefone telefone) {
+        telefone.setId(0);
+        if (telefone.getNumero() == 0) {
+            throw new CamposObrigatorios("Telefone não pode ser vazio");
+        }
 
-        usuarioDAO.deleteAll();
-
+        Telefone telefoneSalvo = telefoneDAO.save(telefone);
+        Usuario usuario = this.recuperar(id);
+        usuario.getTelefones().add(telefoneSalvo);
+        telefoneDAO.save(telefone);
+        return telefoneSalvo;
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable int id
+    ) {
 
         usuarioDAO.deleteById(id);
 
@@ -120,7 +138,9 @@ public class UsuarioControle {
 
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public Usuario editar(@PathVariable int id, @RequestBody Usuario usuarioNovo) {
+    public Usuario editar(@PathVariable int id,
+            @RequestBody Usuario usuarioNovo
+    ) {
         usuarioNovo.setId(id);
 
         Usuario usuarioAntigo = this.recuperar(id);

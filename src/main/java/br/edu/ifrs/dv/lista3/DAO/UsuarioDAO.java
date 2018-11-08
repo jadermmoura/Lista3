@@ -23,8 +23,6 @@ public interface UsuarioDAO  extends CrudRepository<Usuario, Integer>{
 
      public Optional<Usuario> findAllById(int id);
 
-//    public Iterable<Usuario> findByNomeContaining(String contem);
-
     public void findByNome(Usuario usuario);
     
     public void findByTelefones(List<Telefone> telefones);
@@ -34,6 +32,7 @@ public interface UsuarioDAO  extends CrudRepository<Usuario, Integer>{
     public Iterable<Usuario> findByEmail(String email);
 
     public Optional<Usuario> findAllByEmail(String email);
+//    public Optional<Telefone> inserirTelefone(Telefone tel);
 
     
     

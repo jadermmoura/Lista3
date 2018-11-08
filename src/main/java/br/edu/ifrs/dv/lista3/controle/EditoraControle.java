@@ -7,8 +7,10 @@ package br.edu.ifrs.dv.lista3.controle;
 
 import br.edu.ifrs.dv.lista3.DAO.EditoraDAO;
 import br.edu.ifrs.dv.lista3.DAO.LivroDAO;
+import br.edu.ifrs.dv.lista3.erros.AutorJaCadastrado;
 import br.edu.ifrs.dv.lista3.erros.CamposObrigatorios;
 import br.edu.ifrs.dv.lista3.erros.NaoEncontrado;
+import br.edu.ifrs.dv.lista3.modelo.Autor;
 import br.edu.ifrs.dv.lista3.modelo.Editora;
 import br.edu.ifrs.dv.lista3.modelo.Livro;
 import java.util.List;
@@ -35,27 +37,13 @@ public class EditoraControle {
     @Autowired
     LivroDAO livroDAO;
 
+
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public Iterable<Editora> buscaTodasEditoras() {
 
         return editoraDAO.findAll();
     }
-
-
-    @RequestMapping(path = "/buscar/{id}", method = RequestMethod.GET)
-    public Optional<Livro> buscaEditoraPeloId(@PathVariable int id, @PathVariable int idLivro) {
-        Optional<Livro> livros = livroDAO.findById(id);
-        Editora editora = new Editora();
-        editora.getId();
-        return livros;
-    }
-
-    @RequestMapping(path = "/titulo/{titulo}", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public Iterable<Livro> buscarTitulo(@PathVariable("titulo") String titulo
-    ) {
-        return livroDAO.findByTitulo(titulo);
-    }
+  
 
     @RequestMapping(path = "/cnpj/{cnpj}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
@@ -64,44 +52,22 @@ public class EditoraControle {
         return editoraDAO.findByCnpj(cnpj);
     }
 
-//    @RequestMapping(path = "/editora/cnpj/{cnpj}", method = RequestMethod.GET)
-//    @ResponseStatus(HttpStatus.OK)
-//    public boolean verificaCnpjRepetido(@PathVariable("cnpj") String cnpj) {
-//        Optional<Editora> editora = editoraDAO.findAllByCnpj(cnpj);
-//        return editora.isPresent();
-//    }
-
-//    @RequestMapping(path = "/", method = RequestMethod.POST)
-//    public Editora inserir(@RequestBody Editora editora) {
-//        editora.setId(0);
-//        if (editora.getNome().isEmpty() || editora.getNome() == null
-//                || editora.getCnpj().isEmpty() | editora.getCnpj() == null) {
-//            throw new CamposObrigatorios("Todos os campos são obrigatórios");
-//        }
-//        if (this.verificaCnpjRepetido(editora.getCnpj())) {
-//            throw new CamposObrigatorios(("Cnpj já cadastrado"));
-//        }
-//        return editoraDAO.save(editora);
-//
-//    }
-
     @RequestMapping(path = "/todosLivrosEditora/{id}", method = RequestMethod.GET)
     public Iterable<Livro> listaTodosLivroEditora(@PathVariable int id) {
         Editora editora = editoraDAO.findById(id).get();
         return livroDAO.findByEditora(editora);
     }
 
-    @RequestMapping(path = "/{id}/editora/{livros}livros/", method = RequestMethod.GET)
+ @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public List<Editora> mostraEditoraPeloIdLivro(@PathVariable int id, @PathVariable String livros) {
-        Optional<Livro> livroId = livroDAO.findAllById(id);
-
-        if (livroId.isPresent()) {
-            return livroId.get().getEditora();
+    public Editora recuperarEditoraID(@PathVariable int id) {
+        Optional<Editora> editoraId = editoraDAO.findById(id);
+        if (editoraId.isPresent()){
+            return editoraId.get();
         } else {
             throw new NaoEncontrado("Id não encontrado");
-
         }
     }
 
+  
 }

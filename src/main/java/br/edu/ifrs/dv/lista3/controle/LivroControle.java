@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import br.edu.ifrs.dv.lista3.DAO.LivroDAO;
+import br.edu.ifrs.dv.lista3.erros.AutorJaCadastrado;
 import br.edu.ifrs.dv.lista3.erros.CamposObrigatorios;
 import br.edu.ifrs.dv.lista3.erros.RequisicaoInvalida;
 import br.edu.ifrs.dv.lista3.modelo.Editora;
@@ -113,11 +114,6 @@ public class LivroControle {
         return this.recuperar(id).getEditora();
 
     }
-
-//    @RequestMapping(path = "/{id}/autor/", method = RequestMethod.GET)
-//    public List<Autor> listarAutorPeloID(@PathVariable int id) {
-//        return this.recuperar(id).getAutor();
-//    }
     @RequestMapping(path = "/titulo/{titulo}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Livro> buscarTitulo(@PathVariable("titulo") String titulo
@@ -125,7 +121,7 @@ public class LivroControle {
         return livroDAO.findByTitulo(titulo);
     }
 
-    @RequestMapping(path = "/{idProduto}/autores/",method = RequestMethod.GET)
+    @RequestMapping(path = "/{idProduto}/autores/", method = RequestMethod.GET)
     public List<Autor> listarAutor(@PathVariable int idProduto) {
         return this.recuperar(idProduto).getAutor();
     }
@@ -141,15 +137,16 @@ public class LivroControle {
         }
     }
 
-    @RequestMapping(path = "/{id}/editora/",method = RequestMethod.POST)
+    @RequestMapping(path = "/{id}/editora/", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Editora inserirEditoraNoLivro(@PathVariable int id,
             @RequestBody Editora editora) {
-      editora.setId(0);
+        editora.setId(0);
         if (editora.getNome().isEmpty() || editora.getNome() == null
                 || editora.getCnpj().isEmpty() | editora.getCnpj() == null) {
             throw new CamposObrigatorios("Todos os campos são obrigatórios");
-        }if (this.verificaCnpjRepetidoEditora(editora.getCnpj())) {
+        }
+        if (this.verificaCnpjRepetidoEditora(editora.getCnpj())) {
             throw new CamposObrigatorios(("Cnpj já cadastrado"));
         }
         Editora editoraSalvo = editoraDAO.save(editora);
@@ -159,7 +156,7 @@ public class LivroControle {
         return editoraSalvo;
     }
 
-    @RequestMapping(path = "/{id}/autor",method = RequestMethod.POST)
+    @RequestMapping(path = "/{id}/autor", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Autor inserirAutorNoLivro(@PathVariable int id,
             @RequestBody Autor autor) {
@@ -168,6 +165,13 @@ public class LivroControle {
                 || autor.getSegundoNome().isEmpty() || autor.getSegundoNome() == null) {
             throw new CamposObrigatorios("Todos os campos são obrigatórios");
         }
+        Iterable<Autor> listaAutores = autorDAO.findAll();
+        for (Autor autorCadastrado : listaAutores) {
+            if (autorCadastrado.getPrimeiroNome().equals(autor.getPrimeiroNome())
+                    && autorCadastrado.getSegundoNome().equals(autor.getSegundoNome())) {
+                throw new AutorJaCadastrado("Autor já cadastrado");
+            }
+        }
         Autor autorSalvo = autorDAO.save(autor);
         Livro livro = this.recuperar(id);
         livro.getAutor().add(autorSalvo);
@@ -175,8 +179,10 @@ public class LivroControle {
         return autorSalvo;
     }
 
+      
     @RequestMapping(path = "/{idProduto}/editoras/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+
     public void apagarEditora(@PathVariable int idProduto,
             @PathVariable int id) {
         Editora editoraAchado = null;
@@ -194,6 +200,7 @@ public class LivroControle {
             throw new NaoEncontrado("Não encontrado");
         }
     }
+
     @RequestMapping(path = "/{idProduto}/autor/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void apagarAutor(@PathVariable int idProduto,
@@ -239,6 +246,7 @@ public class LivroControle {
         livroAntigo.setDoacao(livroNovo.isDoacao());
         return livroDAO.save(livroAntigo);
     }
+
     @RequestMapping(path = "/editora/cnpj/{cnpj}", method = RequestMethod.GET)
     public boolean verificaCnpjRepetidoEditora(@PathVariable("cnpj") String cnpj) {
         Optional<Editora> editora = editoraDAO.findAllByCnpj(cnpj);
